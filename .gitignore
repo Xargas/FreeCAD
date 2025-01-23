@@ -64,3 +64,9 @@ files_to_translate.txt
 # pixi environments
 .pixi
 *.egg-info
+
+
+
+# local mods
+LibPack-1.1.0-v3.1.0-Release
+LibPack-1.1.0-v3.1.0-Release.7z
