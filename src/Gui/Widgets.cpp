@@ -50,11 +50,11 @@
 #include "Application.h"
 #include "BitmapFactory.h"
 #include "Command.h"
-#include "DlgExpressionInput.h"
+#include "Dialogs/DlgExpressionInput.h"
 #include "PrefWidgets.h"
 #include "QuantitySpinBox_p.h"
 #include "Tools.h"
-#include "ui_DlgTreeWidget.h"
+#include "Dialogs/ui_DlgTreeWidget.h"
 
 using namespace Gui;
 using namespace App;
@@ -1603,7 +1603,7 @@ void ExpLineEdit::onChange() {
 
     if (getExpression()) {
         std::unique_ptr<Expression> result(getExpression()->eval());
-        if(result->isDerivedFrom(App::StringExpression::getClassTypeId()))
+        if(result->isDerivedFrom<App::StringExpression>())
             setText(QString::fromUtf8(static_cast<App::StringExpression*>(
                             result.get())->getText().c_str()));
         else

@@ -114,7 +114,7 @@
 #include "SpaceballEvent.h"
 #include "View3DInventor.h"
 #include "View3DInventorViewer.h"
-#include "DlgObjectSelection.h"
+#include "Dialogs/DlgObjectSelection.h"
 #include <App/Color.h>
 
 FC_LOG_LEVEL_INIT("MainWindow",false,true,true)
@@ -1765,6 +1765,8 @@ void MainWindow::loadWindowSettings()
 #endif
 
     statusBar()->setVisible(showStatusBar);
+
+    setAttribute(Qt::WA_AlwaysShowToolTips);
 
     ToolBarManager::getInstance()->restoreState();
     std::clog << "Toolbars restored" << std::endl;
