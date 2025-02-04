@@ -57,6 +57,9 @@ ViewProviderSheet::~ViewProviderSheet()
     if (!view.isNull()) {
         Gui::getMainWindow()->removeWindow(view);
     }
+    if (!viewParam.isNull()) {
+        Gui::getMainWindow()->removeWindow(viewParam);
+    }
 }
 
 void ViewProviderSheet::setDisplayMode(const char* ModeName)
@@ -105,8 +108,13 @@ void ViewProviderSheet::showSheetMdi()
     if (!this->view) {
         showSpreadsheetView();
         view->viewAll();
+        Gui::getMainWindow()->setActiveWindow(this->view);
     }
-    Gui::getMainWindow()->setActiveWindow(this->view);
+    else if (!this->viewParam) {
+        showSpreadsheetView();
+        viewParam->viewAll();
+        Gui::getMainWindow()->setActiveWindow(this->viewParam);
+    }
 }
 
 void ViewProviderSheet::exportAsFile()
@@ -152,24 +160,38 @@ Sheet* ViewProviderSheet::getSpreadsheetObject() const
 void ViewProviderSheet::beforeDelete()
 {
     ViewProviderDocumentObject::beforeDelete();
-    if (!view) {
+    if ((!view) && (!viewParam)) {
         return;
     }
     if (view == Gui::getMainWindow()->activeWindow()) {
         getDocument()->setActiveView(nullptr, Gui::View3DInventor::getClassTypeId());
     }
-    Gui::getMainWindow()->removeWindow(view);
+    if (viewParam == Gui::getMainWindow()->activeWindow()) {
+        getDocument()->setActiveView(nullptr, Gui::View3DInventor::getClassTypeId());
+    }
+    if (!view) Gui::getMainWindow()->removeWindow(view);
+    if (!viewParam) Gui::getMainWindow()->removeWindow(viewParam);
 }
 
 SheetView* ViewProviderSheet::showSpreadsheetView()
 {
     if (!view) {
         Gui::Document* doc = Gui::Application::Instance->getDocument(this->pcObject->getDocument());
-        view = new SheetView(doc, this->pcObject, Gui::getMainWindow());
-        view->setWindowIcon(Gui::BitmapFactory().pixmap(":icons/Spreadsheet.svg"));
-        view->setWindowTitle(QString::fromUtf8(pcObject->Label.getValue())
+        Sheet *activeSheet = this->getSpreadsheetObject();
+        if (activeSheet->useSheetView.getValue()) {
+            view = new SheetView(doc, this->pcObject, Gui::getMainWindow());
+            view->setWindowIcon(Gui::BitmapFactory().pixmap(":icons/Spreadsheet.svg"));
+            view->setWindowTitle(QString::fromUtf8(pcObject->Label.getValue())
                              + QString::fromLatin1("[*]"));
-        Gui::getMainWindow()->addWindow(view);
+            Gui::getMainWindow()->addWindow(view);
+        }
+        else {
+            viewParam = new SheetParamView(doc, this->pcObject, Gui::getMainWindow());
+            viewParam->setWindowIcon(Gui::BitmapFactory().pixmap(":icons/Spreadsheet.svg"));
+            viewParam->setWindowTitle(QString::fromUtf8(pcObject->Label.getValue())
+                             + QString::fromLatin1("[*]"));
+            Gui::getMainWindow()->addWindow(viewParam);
+        }
         startEditing();
     }
 
@@ -185,6 +207,9 @@ void ViewProviderSheet::updateData(const App::Property* prop)
 {
     if (view) {
         view->updateCell(prop);
+    }
+    if (viewParam) {
+        viewParam->updateCell(prop);
     }
 }
 

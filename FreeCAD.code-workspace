@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"xtree": "cpp",
+			"atomic": "cpp",
+			"deque": "cpp",
+			"filesystem": "cpp",
+			"forward_list": "cpp",
+			"ios": "cpp",
+			"list": "cpp",
+			"strstream": "cpp",
+			"system_error": "cpp",
+			"vector": "cpp",
+			"xhash": "cpp",
+			"xiosbase": "cpp",
+			"xstring": "cpp",
+			"map": "cpp"
+		}
+	}
+}

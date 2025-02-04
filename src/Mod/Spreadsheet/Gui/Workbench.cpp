@@ -216,6 +216,7 @@ Gui::MenuItem* Workbench::setupMenuBar() const
 
     spreadsheet->setCommand("&Spreadsheet");
     *spreadsheet << "Spreadsheet_CreateSheet"
+                 << "Spreadsheet_CreateParamsSheet"
                  << "Separator"
                  << "Spreadsheet_Import"
                  << "Spreadsheet_Export"
@@ -233,6 +234,7 @@ Gui::ToolBarItem* Workbench::setupToolBars() const
     Gui::ToolBarItem* part = new Gui::ToolBarItem(root);
     part->setCommand("Spreadsheet");
     *part << "Spreadsheet_CreateSheet"
+          << "Spreadsheet_CreateParamsSheet"
           << "Separator"
           << "Spreadsheet_Import"
           << "Spreadsheet_Export"

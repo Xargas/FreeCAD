@@ -90,6 +90,11 @@ Sheet::Sheet()
                       "Spreadsheet",
                       (PropertyType)(Prop_ReadOnly | Prop_Hidden),
                       "Row heights");
+    ADD_PROPERTY_TYPE(useSheetView,
+                      (true),
+                      "Spreadsheet",
+                      (PropertyType)(Prop_Output),
+                      "Sheet or Params");
     ExpressionEngine.expressionChanged.connect([this](const App::ObjectIdentifier&) {
         this->updateBindings();
     });

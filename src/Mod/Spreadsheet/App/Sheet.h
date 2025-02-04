@@ -234,6 +234,10 @@ public:
     const std::vector<App::Range>& getCopyOrCutRange(bool copy = true) const;
     unsigned getCopyOrCutBorder(App::CellAddress address, bool copy = true) const;
 
+// TODO: move for access later
+    /* View that should be used */
+    App::PropertyBool useSheetView;
+
 protected:
     void onChanged(const App::Property* prop) override;
 
@@ -284,6 +288,8 @@ protected:
 
     /* Row heights */
     PropertyRowHeights rowHeights;
+
+    // TODO move here
 
     /* Document observers to track changes to external properties */
     using ObserverMap = std::map<std::string, SheetObserver*>;

@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (c) 2002 Jürgen Riegel <juergen.riegel@web.de>              *
- *   Copyright (c) 2015 Eivind Kvedalen <eivind@kvedalen.name>             *
+ *   Copyright (c) 2025 Markus Freilinger <Xargas@users.noreply.github.com>*
  *                                                                         *
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Library General Public           *
@@ -971,11 +970,45 @@ bool CmdCreateSpreadsheet::isActive()
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+DEF_STD_CMD_A(CmdCreateParamsSpreadsheet)
+
+CmdCreateParamsSpreadsheet::CmdCreateParamsSpreadsheet()
+    : Command("Spreadsheet_CreateParamsSheet")
+{
+    sAppModule = "Spreadsheet";
+    sGroup = QT_TR_NOOP("Spreadsheet");
+    sMenuText = QT_TR_NOOP("&Create params spreadsheet");
+    sToolTipText = QT_TR_NOOP("Create a new params spreadsheet");
+    sWhatsThis = "Spreadsheet_CreateParamsSheet";
+    sStatusTip = sToolTipText;
+    sPixmap = "Spreadsheet";
+}
+
+void CmdCreateParamsSpreadsheet::activated(int iMsg)
+{
+    Q_UNUSED(iMsg);
+    std::string FeatName = getUniqueObjectName("Spreadsheet");
+
+    openCommand(QT_TRANSLATE_NOOP("Command", "Create Spreadsheet"));
+    doCommand(Doc, "App.activeDocument().addObject('Spreadsheet::Sheet','%s\')", FeatName.c_str());
+    doCommand(Gui, "Gui.Selection.clearSelection()\n");
+    doCommand(Gui, "Gui.Selection.addSelection(App.activeDocument().Name,'%s\')", FeatName.c_str());
+    commitCommand();
+}
+
+bool CmdCreateParamsSpreadsheet::isActive()
+{
+    return App::GetApplication().getActiveDocument();
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 void CreateSpreadsheetCommands()
 {
     Gui::CommandManager& rcCmdMgr = Gui::Application::Instance->commandManager();
 
     rcCmdMgr.addCommand(new CmdCreateSpreadsheet());
+    rcCmdMgr.addCommand(new CmdCreateParamsSpreadsheet());
 
     rcCmdMgr.addCommand(new CmdSpreadsheetMergeCells());
     rcCmdMgr.addCommand(new CmdSpreadsheetSplitCell());

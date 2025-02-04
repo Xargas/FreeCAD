@@ -45,6 +45,7 @@ qt_add_resources(SpreadsheetGui_QRC_SRCS ${SpreadsheetGui_RES_SRCS} ${Spreadshee
 
 set(SpreadsheetGui_UIC_SRCS
    Sheet.ui
+   Params.ui
    PropertiesDialog.ui
    DlgBindSheet.ui
    DlgSheetConf.ui
@@ -66,12 +67,16 @@ SET(SpreadsheetGui_SRCS
     Resources/Spreadsheet.qrc
     SpreadsheetView.cpp
     SpreadsheetView.h
+    SpreadsheetParamView.cpp
+    SpreadsheetParamView.h
     SpreadsheetDelegate.h
     SpreadsheetDelegate.cpp
     SheetTableView.cpp
     SheetTableView.h
     SheetTableViewAccessibleInterface.h
     SheetTableViewAccessibleInterface.cpp
+    SheetParamsView.cpp
+    SheetParamsView.h
     SheetModel.h
     SheetModel.cpp
     PreCompiled.cpp

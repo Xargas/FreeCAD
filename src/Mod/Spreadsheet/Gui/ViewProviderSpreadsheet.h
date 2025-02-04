@@ -30,6 +30,7 @@
 #include <Gui/ViewProviderFeaturePython.h>
 #include <Mod/Spreadsheet/SpreadsheetGlobal.h>
 #include <Mod/Spreadsheet/Gui/SpreadsheetView.h>
+#include <Mod/Spreadsheet/Gui/SpreadsheetParamView.h>
 
 
 namespace SpreadsheetGui
@@ -88,6 +89,7 @@ protected:
 
 private:
     QPointer<SheetView> view;
+    QPointer<SheetParamView> viewParam;
 };
 
 using ViewProviderSheetPython = Gui::ViewProviderFeaturePythonT<ViewProviderSheet>;
