@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 16,
@@ -321,6 +321,13 @@
           "value": "1"
         }
       }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "Release-Xargas-Build",
+      "configurePreset": "Release-Xargas",
+      "configuration": "Release"
     }
   ]
 }
