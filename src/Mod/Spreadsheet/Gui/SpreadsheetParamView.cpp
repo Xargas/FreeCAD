@@ -536,4 +536,4 @@ void SheetParamView::deleteSelf()
 
 // ----------------------------------------------------------
 
-#include "moc_SpreadsheetView.cpp"
+#include "moc_SpreadsheetParamView.cpp"

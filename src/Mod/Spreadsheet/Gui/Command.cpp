@@ -38,6 +38,7 @@
 
 #include "PropertiesDialog.h"
 #include "SpreadsheetView.h"
+#include "SpreadsheetParamView.h"
 #include "ViewProviderSpreadsheet.h"
 
 
