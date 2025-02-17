@@ -175,27 +175,35 @@ void ViewProviderSheet::beforeDelete()
 
 SheetView* ViewProviderSheet::showSpreadsheetView()
 {
+    Gui::Document* doc = Gui::Application::Instance->getDocument(this->pcObject->getDocument());
+    Sheet *activeSheet = this->getSpreadsheetObject();
+
     if (!view) {
-        Gui::Document* doc = Gui::Application::Instance->getDocument(this->pcObject->getDocument());
-        Sheet *activeSheet = this->getSpreadsheetObject();
-        if (activeSheet->useSheetView.getValue()) {
-            view = new SheetView(doc, this->pcObject, Gui::getMainWindow());
-            view->setWindowIcon(Gui::BitmapFactory().pixmap(":icons/Spreadsheet.svg"));
-            view->setWindowTitle(QString::fromUtf8(pcObject->Label.getValue())
-                             + QString::fromLatin1("[*]"));
-            Gui::getMainWindow()->addWindow(view);
-        }
-        else {
-            viewParam = new SheetParamView(doc, this->pcObject, Gui::getMainWindow());
-            viewParam->setWindowIcon(Gui::BitmapFactory().pixmap(":icons/Spreadsheet.svg"));
-            viewParam->setWindowTitle(QString::fromUtf8(pcObject->Label.getValue())
-                             + QString::fromLatin1("[*]"));
-            Gui::getMainWindow()->addWindow(viewParam);
-        }
-        startEditing();
+        view = new SheetView(doc, this->pcObject, Gui::getMainWindow());
+        view->setWindowIcon(Gui::BitmapFactory().pixmap(":icons/Spreadsheet.svg"));
+        view->setWindowTitle(QString::fromUtf8(pcObject->Label.getValue())
+                            + QString::fromLatin1("[*]"));
     }
 
-    return view;
+    if (!viewParam) {
+        viewParam = new SheetParamView(doc, this->pcObject, Gui::getMainWindow());
+        viewParam->setWindowIcon(Gui::BitmapFactory().pixmap(":icons/Spreadsheet.svg"));
+        viewParam->setWindowTitle(QString::fromUtf8(pcObject->Label.getValue())
+                            + QString::fromLatin1("[*]"));
+    }
+
+    if (activeSheet->useSheetView.getValue()) {
+      Gui::getMainWindow()->addWindow(view);
+      startEditing();
+      return view;
+    }
+    else {
+      Gui::getMainWindow()->addWindow(viewParam);
+      startEditing();
+      return view; // TODO FIXME viewParam
+    }
+    
+    return nullptr;
 }
 
 Gui::MDIView* ViewProviderSheet::getMDIView() const

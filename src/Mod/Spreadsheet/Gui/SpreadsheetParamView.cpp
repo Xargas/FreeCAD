@@ -67,7 +67,7 @@ SheetParamView::SheetParamView(Gui::Document* pcDocument, App::DocumentObject* d
 {
     // Set up ui
 
-    model = new SheetModel(static_cast<Sheet*>(docObj));
+    model = new SheetParamModel(static_cast<Sheet*>(docObj));
 
     ui = new Ui::Params();
     QWidget* w = new QWidget(this);
@@ -82,6 +82,7 @@ SheetParamView::SheetParamView(Gui::Document* pcDocument, App::DocumentObject* d
     ui->cells->setSheet(sheet);
 
     // Connect signals
+    #if 0
     connect(ui->cells->selectionModel(),
             &QItemSelectionModel::currentChanged,
             this,
@@ -118,6 +119,7 @@ SheetParamView::SheetParamView(Gui::Document* pcDocument, App::DocumentObject* d
     // NOLINTEND
 
     connect(model, &QAbstractItemModel::dataChanged, this, &SheetParamView::modelUpdated);
+#endif
 
     QPalette palette = ui->cells->palette();
     palette.setColor(QPalette::Base, QColor(255, 255, 255));

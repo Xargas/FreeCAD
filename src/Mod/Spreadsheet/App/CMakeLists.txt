@@ -65,4 +65,5 @@ endif()
 SET_BIN_DIR(Spreadsheet Spreadsheet /Mod/Spreadsheet)
 SET_PYTHON_PREFIX_SUFFIX(Spreadsheet)
 
+message(STATUS "XXX: ${CMAKE_INSTALL_LIBDIR}")
 INSTALL(TARGETS Spreadsheet DESTINATION ${CMAKE_INSTALL_LIBDIR})

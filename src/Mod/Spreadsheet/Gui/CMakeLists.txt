@@ -79,6 +79,8 @@ SET(SpreadsheetGui_SRCS
     SheetParamsView.h
     SheetModel.h
     SheetModel.cpp
+    SheetParamModel.h
+    SheetParamModel.cpp
     PreCompiled.cpp
     PreCompiled.h
     Workbench.cpp

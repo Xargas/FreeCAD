@@ -994,6 +994,7 @@ void CmdCreateParamsSpreadsheet::activated(int iMsg)
     doCommand(Doc, "App.activeDocument().addObject('Spreadsheet::Sheet','%s\')", FeatName.c_str());
     doCommand(Gui, "Gui.Selection.clearSelection()\n");
     doCommand(Gui, "Gui.Selection.addSelection(App.activeDocument().Name,'%s\')", FeatName.c_str());
+    // TODO set use Sheet View to false here!
     commitCommand();
 }
 

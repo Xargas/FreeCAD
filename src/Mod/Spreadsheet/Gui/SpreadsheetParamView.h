@@ -29,7 +29,7 @@
 #include <Gui/MDIViewPy.h>
 #include <Mod/Spreadsheet/App/Sheet.h>
 
-#include "SheetModel.h"
+#include "SheetParamModel.h"
 
 
 class QSlider;
@@ -132,7 +132,7 @@ protected:
     Ui::Params* ui;
     Spreadsheet::Sheet* sheet;
     SpreadsheetDelegate* delegate;
-    SheetModel* model;
+    SheetParamModel* model;
     boost::signals2::scoped_connection columnWidthChangedConnection;
     boost::signals2::scoped_connection rowHeightChangedConnection;
     boost::signals2::scoped_connection positionChangedConnection;
