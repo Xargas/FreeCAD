@@ -988,13 +988,13 @@ CmdCreateParamsSpreadsheet::CmdCreateParamsSpreadsheet()
 void CmdCreateParamsSpreadsheet::activated(int iMsg)
 {
     Q_UNUSED(iMsg);
-    std::string FeatName = getUniqueObjectName("Spreadsheet");
+    std::string FeatName = getUniqueObjectName("Params");
 
     openCommand(QT_TRANSLATE_NOOP("Command", "Create Spreadsheet"));
-    doCommand(Doc, "App.activeDocument().addObject('Spreadsheet::Sheet','%s\')", FeatName.c_str());
+    doCommand(Doc, "obj = App.activeDocument().addObject('Spreadsheet::Sheet','%s\')", FeatName.c_str());
+    doCommand(Doc, "obj.useSheetView = False");
     doCommand(Gui, "Gui.Selection.clearSelection()\n");
     doCommand(Gui, "Gui.Selection.addSelection(App.activeDocument().Name,'%s\')", FeatName.c_str());
-    // TODO set use Sheet View to false here!
     commitCommand();
 }
 

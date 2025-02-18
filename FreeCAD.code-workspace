@@ -20,7 +20,8 @@
 			"xiosbase": "cpp",
 			"xstring": "cpp",
 			"map": "cpp",
-			"xmemory": "cpp"
+			"xmemory": "cpp",
+			"memory": "cpp"
 		}
 	}
 }

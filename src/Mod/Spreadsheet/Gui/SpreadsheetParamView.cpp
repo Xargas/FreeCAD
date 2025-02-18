@@ -42,10 +42,10 @@
 
 #include <Mod/Spreadsheet/App/Sheet.h>
 
-//#include "LineEdit.h"
+#include "LineEdit.h"
 #include "SpreadsheetDelegate.h"
 #include "SpreadsheetParamView.h"
-//#include "ZoomableView.h"
+
 #include "qtcolorpicker.h"
 #include "ui_Params.h"
 
@@ -74,33 +74,22 @@ SheetParamView::SheetParamView(Gui::Document* pcDocument, App::DocumentObject* d
     ui->setupUi(w);
     setCentralWidget(w);
 
-    // new ZoomableView(ui); // TODO FIXME
-
     delegate = new SpreadsheetDelegate(sheet);
     ui->cells->setModel(model);
     ui->cells->setItemDelegate(delegate);
     ui->cells->setSheet(sheet);
 
     // Connect signals
-    #if 0
     connect(ui->cells->selectionModel(),
             &QItemSelectionModel::currentChanged,
             this,
             &SheetParamView::currentChanged);
 
-    /*connect(dynamic_cast<SheetViewHeader*>(ui->cells->horizontalHeader()),
-            &SheetViewHeader::resizeFinished,
-            this,
-            &SheetParamView::columnResizeFinished);*/
     connect(ui->cells->horizontalHeader(),
             &QHeaderView::sectionResized,
             this,
             &SheetParamView::columnResized);
 
-    /*connect(dynamic_cast<SheetViewHeader*>(ui->cells->verticalHeader()),
-            &SheetViewHeader::resizeFinished,
-            this,
-            &SheetParamView::rowResizeFinished);*/
     connect(ui->cells->verticalHeader(),
             &QHeaderView::sectionResized,
             this,
@@ -119,7 +108,6 @@ SheetParamView::SheetParamView(Gui::Document* pcDocument, App::DocumentObject* d
     // NOLINTEND
 
     connect(model, &QAbstractItemModel::dataChanged, this, &SheetParamView::modelUpdated);
-#endif
 
     QPalette palette = ui->cells->palette();
     palette.setColor(QPalette::Base, QColor(255, 255, 255));
@@ -315,7 +303,8 @@ void SheetParamView::updateContentLine()
 
     if (i.isValid()) {
         std::string str;
-        if (const auto* cell = sheet->getCell(CellAddress(i.row(), i.column()))) {
+        const auto* cell = sheet->getCell(CellAddress(i.row(), i.column()));
+        if (cell) {
             (void)cell->getStringContent(str);
         }
     }
@@ -327,38 +316,11 @@ void SheetParamView::updateAliasLine()
 
     if (i.isValid()) {
         std::string str;
-        if (const auto* cell = sheet->getCell(CellAddress(i.row(), i.column()))) {
+        const auto* cell = sheet->getCell(CellAddress(i.row(), i.column()));
+        if (cell) {
             (void)cell->getAlias(str);
         }
     }
-}
-
-void SheetParamView::columnResizeFinished()
-{
-    if (newColumnSizes.empty()) {
-        return;
-    }
-
-    blockSignals(true);
-    for (auto& v : newColumnSizes) {
-        sheet->setColumnWidth(v.first, v.second);
-    }
-    blockSignals(false);
-    newColumnSizes.clear();
-}
-
-void SheetParamView::rowResizeFinished()
-{
-    if (newRowSizes.empty()) {
-        return;
-    }
-
-    blockSignals(true);
-    for (auto& v : newRowSizes) {
-        sheet->setRowHeight(v.first, v.second);
-    }
-    blockSignals(false);
-    newRowSizes.clear();
 }
 
 void SheetParamView::modelUpdated(const QModelIndex& topLeft, const QModelIndex& bottomRight)
@@ -402,6 +364,18 @@ void SheetParamView::resizeRow(int col, int newSize)
 void SheetParamView::editingFinishedWithKey(int key, Qt::KeyboardModifiers modifiers)
 {
     QModelIndex i = ui->cells->currentIndex();
+
+    // set alias, as now the content of a cell was changed
+    if (1 == i.column()) { /* 1 = paramValue column */
+        std::string str;
+        auto* cellParamName = sheet->getCell(CellAddress(i.row(), i.column()-1));
+        if (nullptr != cellParamName) {
+            cellParamName->getStringContent(str);
+            if (str[0] == '\'') {
+                sheet->setAlias(CellAddress(i.row(), i.column()), str.substr(1));
+            }
+        }
+    }
 
     if (i.isValid()) {
         ui->cells->finishEditWithMove(key, modifiers);

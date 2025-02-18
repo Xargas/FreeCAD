@@ -118,8 +118,6 @@ protected Q_SLOTS:
     void currentChanged(const QModelIndex& current, const QModelIndex& previous);
     void columnResized(int col, int oldSize, int newSize);
     void rowResized(int row, int oldSize, int newSize);
-    void columnResizeFinished();
-    void rowResizeFinished();
     void modelUpdated(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
 protected:
