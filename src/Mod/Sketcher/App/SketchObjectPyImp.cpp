@@ -2536,3 +2536,17 @@ int SketchObjectPy::setCustomAttributes(const char* attr, PyObject* obj)
 
     return 0;
 }
+
+PyObject* SketchObjectPy::constraintHasExpression(PyObject *args)
+{
+    int constNum;
+    bool hasExpr;
+
+    if (!PyArg_ParseTuple(args, "i", &constNum)) {
+        return nullptr;
+    }
+
+    hasExpr = this->getSketchObjectPtr()->constraintHasExpression(constNum);
+
+    return Py::new_reference_to(Py::Boolean(hasExpr));
+}

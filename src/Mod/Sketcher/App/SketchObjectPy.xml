@@ -921,5 +921,19 @@ setLabelDistance(constraintIndex:int, value:float)
         <UserDocu>gets the GeometryId of the SketchGeometryExtension of the geometry with the provided GeoId</UserDocu>
       </Documentation>
     </Methode>
+    <Methode Name="constraintHasExpression">
+      <Documentation>
+        <UserDocu>Gets whether a constraint has an assigned expression, or not.
+
+constraintHasExpression(constNum:int)
+
+    Args:
+        constNum: The zero-based index of the constraint to query.
+
+    Returns:
+        `True` if the constraint has an expression assigned,
+        `False` if not or the constraint index is out of range.</UserDocu>
+      </Documentation>
+    </Methode>
   </PythonExport>
 </GenerateModel>
