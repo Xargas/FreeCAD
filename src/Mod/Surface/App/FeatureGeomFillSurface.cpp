@@ -175,8 +175,10 @@ App::DocumentObjectExecReturn* GeomFillSurface::execute()
 
         return App::DocumentObject::StdReturn;
     }
-    catch (Standard_ConstructionError&) {
+    catch (Standard_ConstructionError& err) {
         // message is in a Latin language, show a normal one
+        Standard_CString str = err.GetMessageString();
+        Base::Console().Error("OCCT: %s\n", str);
         return new App::DocumentObjectExecReturn("Curves are disjoint.");
     }
     catch (StdFail_NotDone&) {
@@ -319,6 +321,27 @@ void GeomFillSurface::createBezierSurface(TopoDS_Wire& aWire)
     createFace(aSurfBuilder.Surface());
 }
 
+void debugPrint(const Handle(Geom_BSplineCurve) &bspline)
+{
+    TColStd_Array1OfReal arrKnots = bspline->Knots();
+    const TColgp_Array1OfPnt arrPoles = bspline->Poles();
+
+    Base::Console().Error(" SZ: %d\n", arrKnots.Size());
+    NCollection_Array1<Standard_Real>::iterator i = arrKnots.begin();
+    while (i != arrKnots.end()) {
+        Base::Console().Error(" - KNOT: %f\n", i[0]);
+        i++;
+    }
+
+    Base::Console().Error(" SZ: %d\n", arrPoles.Size());
+    NCollection_IndexedIterator<std::random_access_iterator_tag, TColgp_Array1OfPnt, gp_Pnt, true> k = arrPoles.begin();
+    while (k != arrPoles.end()) {
+        Base::Console().Error(" - POLE: %f, %f, %f\n", k[0].X(), k[0].Y(), k[0].Z());
+        k++;
+    }
+    Base::Console().Error("####################\n");
+}
+
 void GeomFillSurface::createBSplineSurface(TopoDS_Wire& aWire)
 {
     std::vector<Handle(Geom_BSplineCurve)> curves;
@@ -347,6 +370,16 @@ void GeomFillSurface::createBSplineSurface(TopoDS_Wire& aWire)
             Handle(Geom_BSplineCurve) bspline2 = conv.CurveToBSplineCurve(trim, paratype);
             if (!bspline2.IsNull()) {
                 bspline2->Transform(transf);  // apply original transformation to control points
+#if 1
+                Base::Console().Error("A: (%f, %f, %f) -> (%f, %f, %f)\n",
+                    trim->StartPoint().X(), trim->StartPoint().Y(), trim->StartPoint().Z(),
+                    trim->EndPoint().X(),   trim->EndPoint().Y(),   trim->StartPoint().Z()
+                );
+                Base::Console().Error("B: (%f, %f, %f) -> (%f, %f, %f)\n",
+                    bspline2->StartPoint().X(), bspline2->StartPoint().Y(), bspline2->StartPoint().Z(),
+                    bspline2->EndPoint().X(),   bspline2->EndPoint().Y(),   bspline2->StartPoint().Z()
+                );
+#endif
                 curves.push_back(bspline2);
             }
             else {
@@ -367,15 +400,33 @@ void GeomFillSurface::createBSplineSurface(TopoDS_Wire& aWire)
     GeomFill_FillingStyle fstyle = getFillingStyle();
     GeomFill_BSplineCurves aSurfBuilder;  // Create Surface Builder
 
+#if 0
+    debugPrint(curves[0]);
+    debugPrint(curves[1]);
+    debugPrint(curves[2]);
+#endif
+
+    //curves[0]->Reverse(); // why does this fix the bug?
+    // idea: CurveToBSplineCurve starts from the "wrong side when using arcs?"
+
     std::size_t edgeCount = curves.size();
     const boost::dynamic_bitset<>& booleans = ReversedList.getValues();
     if (edgeCount == booleans.size()) {
+        Base::Console().Error("REVERSE active\n");
         for (std::size_t i = 0; i < edgeCount; i++) {
             if (booleans[i]) {
                 curves[i]->Reverse();
             }
         }
     }
+
+#if 0
+    Base::Console().Error("BOOL: %d\n", booleans.size());
+    for (std::size_t i = 0; i < booleans.size(); i++) {
+        Base::Console().Error(" %d: %d\n", i, booleans[i]);
+    }
+#endif
+
     if (edgeCount == 2) {
         aSurfBuilder.Init(curves[0], curves[1], fstyle);
     }
@@ -385,6 +436,7 @@ void GeomFillSurface::createBSplineSurface(TopoDS_Wire& aWire)
     else if (edgeCount == 4) {
         aSurfBuilder.Init(curves[0], curves[1], curves[2], curves[3], fstyle);
     }
-
+    Base::Console().Error("before createface\n");
     createFace(aSurfBuilder.Surface());
+    Base::Console().Error("after createface\n");
 }

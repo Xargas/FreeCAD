@@ -304,22 +304,14 @@
         "release"
       ],
       "cacheVariables": {
-        "FREECAD_LIBPACK_DIR": {
-          "type": "PATH",
-          "value": "C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release"
-        },
-        "FREECAD_COPY_LIBPACK_BIN_TO_BUILD": {
-          "type": "BOOL",
-          "value": "1"
-        },
-        "FREECAD_COPY_DEPEND_DIRS_TO_BUILD": {
-          "type": "BOOL",
-          "value": "1"
-        },
-        "DFREECAD_COPY_PLUGINS_BIN_TO_BUILD": {
-          "type": "BOOL",
-          "value": "1"
-        }
+        "FREECAD_LIBPACK_DIR": "C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release",
+        "FREECAD_COPY_LIBPACK_BIN_TO_BUILD": true,
+        "FREECAD_COPY_DEPEND_DIRS_TO_BUILD": true,
+        "DFREECAD_COPY_PLUGINS_BIN_TO_BUILD": true,
+        "BUILD_FEM": false,
+        "BUILD_MESH_PART": false,
+        "BUILD_FLAT_MESH": false,
+        "BUILD_OPENSCAD": false
       }
     }
   ],
